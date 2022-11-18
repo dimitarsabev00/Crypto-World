@@ -35,6 +35,21 @@ function App() {
               </Routes>
             </div>
           </Layout>
+          <div className="footer">
+            <Typography.Title
+              level={5}
+              style={{ color: "white", textAlign: "center" }}
+            >
+              {"Copyright © 2022 "}
+              <Link to="/">Crypto World Inc.</Link> <br />
+              All Rights Reserved.
+            </Typography.Title>
+            <Space>
+              <Link to="/">Home</Link>
+              <Link to="/exchanges">Exchanges</Link>
+              <Link to="/news">News</Link>
+            </Space>
+          </div>
         </div>
       </div>
     </Router>
