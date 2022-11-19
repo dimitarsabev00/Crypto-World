@@ -74,11 +74,7 @@ const CryptoDetails = () => {
       value: cryptoDetails?.numberOfMarkets,
       icon: <FundOutlined />,
     },
-    {
-      title: "Number Of Exchanges",
-      value: cryptoDetails?.numberOfExchanges,
-      icon: <MoneyCollectOutlined />,
-    },
+
     {
       title: "Aprroved Supply",
       value: cryptoDetails?.supply?.confirmed ? (

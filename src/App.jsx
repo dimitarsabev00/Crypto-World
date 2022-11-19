@@ -2,7 +2,6 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Layout, Typography, Space } from "antd";
 import {
-  Exchanges,
   Homepage,
   News,
   Cryptocurrencies,
@@ -21,8 +20,6 @@ function App() {
             <div className="routes">
               <Routes>
                 <Route path="/" element={<Homepage />} />
-
-                <Route path="/exchanges" element={<Exchanges />} />
 
                 <Route
                   path="/cryptocurrencies"
@@ -46,7 +43,7 @@ function App() {
             </Typography.Title>
             <Space>
               <Link to="/">Home</Link>
-              <Link to="/exchanges">Exchanges</Link>
+              <Link to="/cryptocurrencies">Cryptocurrencies</Link>
               <Link to="/news">News</Link>
             </Space>
           </div>
