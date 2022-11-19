@@ -10,6 +10,7 @@ const demoImage =
 
 const { Text, Title } = Typography;
 const { Option } = Select;
+import Loading from "../components/Loader";
 
 const News = ({ simplified }) => {
   const [newsCategory, setNewsCategory] = useState("Cryptocurrency");
@@ -19,7 +20,7 @@ const News = ({ simplified }) => {
     count: simplified ? 6 : 12,
   });
 
-  if (!cryptoNews?.value) return "Loading...";
+  if (!cryptoNews?.value) return <Loading />;
 
   return (
     <Row gutter={[24, 24]}>
