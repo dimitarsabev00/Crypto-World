@@ -4,12 +4,12 @@ import { useGetCryptosQuery } from "../services/cryptoApi";
 
 import { Typography, Row, Col, Statistic } from "antd";
 import { Link } from "react-router-dom";
+import { Cryptocurrencies } from "../components";
 const { Title } = Typography;
 const Homepage = () => {
-  const { data, isFetching } = useGetCryptosQuery();
+  const { data, isFetching } = useGetCryptosQuery(10);
   const globalStats = data?.data?.stats;
-  console.log(globalStats);
-
+  if (isFetching) return "Loading...";
   return (
     <>
       <Title level={2} className="heading">
@@ -45,6 +45,15 @@ const Homepage = () => {
           />
         </Col>
       </Row>
+      <div className="home-heading-container">
+        <Title level={2} className="home-title">
+          Top 10 Cryptos In The World
+        </Title>
+        <Title level={3} className="show-more">
+          <Link to="/cryptocurrencies">Show more</Link>
+        </Title>
+      </div>
+      <Cryptocurrencies simplified />
     </>
   );
 };
