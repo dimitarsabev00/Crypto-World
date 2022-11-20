@@ -23,34 +23,33 @@ ChartJS.register(
 );
 
 const LineChart = ({ coinHistory, currentPrice, coinName }) => {
-  const coinPrice = [];
-  const coinTimestamp = [];
-  for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-    coinPrice.push(coinHistory?.data?.history[i].price);
-  }
-
-  for (let i = 0; i < coinHistory?.data?.history?.length; i += 1) {
-    coinTimestamp.push(
-      new Date(coinHistory?.data?.history[i].timestamp).toLocaleDateString()
-    );
-  }
   const options = {
-    responsive: true,
+    elements: {
+      point: {
+        radius: 1,
+      },
+    },
   };
 
   const data = {
-    labels: coinTimestamp,
+    labels: coinHistory?.data.history.map((coin) => {
+      let date = new Date(coin["timestamp"]);
+      let time =
+        date.getHours() > 12
+          ? `${date.getHours() - 12}:${date.getMinutes()} PM`
+          : `${date.getHours()}:${date.getMinutes()} AM`;
+      return time;
+    }),
     datasets: [
       {
         label: "Price In USD",
-        data: coinPrice,
+        data: coinHistory?.data.history.map((coin) => coin["price"]),
         fill: false,
         backgroundColor: "#0071bd",
         borderColor: "#0071bd",
       },
     ],
   };
-
   return (
     <>
       <Row className="chart-header">
