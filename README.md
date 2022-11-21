@@ -1,6 +1,6 @@
 # Crypto World
 
-## Using API-s :
+## Using API-s
 
 ### `CoinGecko API`
 
