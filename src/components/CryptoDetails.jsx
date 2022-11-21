@@ -14,94 +14,118 @@ import {
   NumberOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
-
-
+import {
+  useGetCryptoDetailsQuery,
+  useGetCryptoHistoryQuery,
+} from "../services/coinGeckoAPI";
+import Loader from "./Loader";
+import LineChart from "./LineChart";
 const { Title, Text } = Typography;
 const { Option } = Select;
 const CryptoDetails = () => {
   const { coinId } = useParams();
-  const [timeperiod, setTimeperiod] = useState("7d");
+  const [timeperiod, setTimeperiod] = useState("1");
+  const { data: cryptoDetails, isFetching } = useGetCryptoDetailsQuery(coinId);
+  const { data: coinHistory } = useGetCryptoHistoryQuery({
+    coinId,
+    timeperiod,
+  });
 
-  const time = ["3h", "24h", "7d", "30d", "1y", "3m", "3y", "5y"];
+  if (isFetching) return <Loader />;
+  const time = ["1", "15", "30", "max"];
 
   const stats = [
     {
       title: "Price to USD",
-      value: `0`,
+      value: `$ ${
+        cryptoDetails?.market_data?.current_price.usd &&
+        millify(cryptoDetails?.market_data?.current_price.usd)
+      }`,
       icon: <DollarCircleOutlined />,
     },
-    { title: "Rank", value: "0", icon: <NumberOutlined /> },
+    {
+      title: "Rank",
+      value: cryptoDetails?.coingecko_rank,
+      icon: <NumberOutlined />,
+    },
     {
       title: "24h Volume",
-      value: `0`,
+      value: `$ ${
+        cryptoDetails?.market_data?.total_volume.usd &&
+        millify(cryptoDetails?.market_data?.total_volume.usd)
+      }`,
       icon: <ThunderboltOutlined />,
     },
     {
       title: "Market Cap",
-      value: `0`,
+      value: `$ ${
+        cryptoDetails?.market_data?.market_cap?.usd &&
+        millify(cryptoDetails?.market_data?.market_cap?.usd)
+      }`,
       icon: <DollarCircleOutlined />,
     },
     {
       title: "All-time-high(daily avg.)",
-      value: `0`,
+      value: `$ ${
+        cryptoDetails?.market_data?.ath?.usd &&
+        millify(cryptoDetails?.market_data?.ath?.usd)
+      }`,
       icon: <TrophyOutlined />,
     },
   ];
-
   const genericStats = [
     {
-      title: "Number Of Markets",
-      value: "0",
-      icon: <FundOutlined />,
-    },
-
-    {
-      title: "Aprroved Supply",
-      value: "0",
-      icon: <ExclamationCircleOutlined />,
-    },
-    {
       title: "Total Supply",
-      value: "0",
+      value: `$ ${
+        cryptoDetails?.market_data?.total_supply &&
+        millify(cryptoDetails?.market_data?.total_supply)
+      }`,
       icon: <ExclamationCircleOutlined />,
     },
     {
       title: "Circulating Supply",
-      value: "0",
+      value: `$ ${
+        cryptoDetails?.market_data?.circulating_supply &&
+        millify(cryptoDetails?.market_data?.circulating_supply)
+      }`,
       icon: <ExclamationCircleOutlined />,
     },
   ];
-
   return (
     <Col className="coin-detail-container">
       <Col className="coin-heading-container">
         <Title level={2} className="coin-name">
-          {data?.data?.coin.name} ({data?.data?.coin.symbol}) Price
+          {cryptoDetails.name} ({cryptoDetails.symbol}) Price
         </Title>
         <p>
-          ex.Bitcoin live price in US Dollar (USD). View value statistics,
-          market cap and supply.
+          {cryptoDetails.name} live price in US Dollar (USD). View value
+          statistics, market cap and supply.
         </p>
       </Col>
       <Select
-        defaultValue="7d"
+        defaultValue="1"
         className="select-timeperiod"
         placeholder="Select Timeperiod"
+        onChange={(value) => setTimeperiod(value)}
       >
         {time.map((date) => (
           <Option key={date}>{date}</Option>
         ))}
       </Select>
-      {/* <LineChart /> */}
+      <LineChart
+        coinHistory={coinHistory}
+        currentPrice={millify(cryptoDetails?.market_data?.current_price.usd)}
+        coinName={cryptoDetails?.name}
+      />
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-heading">
             <Title level={3} className="coin-details-heading">
-              ex.Bitcoin Value Statistics
+              {cryptoDetails.name} Value Statistics
             </Title>
             <p>
-              An overview showing the statistics of ex.Bitcoin, such as the base
-              and quote currency, the rank, and trading volume.
+              An overview showing the statistics of {cryptoDetails.name}, such
+              as the base and quote currency, the rank, and trading volume.
             </p>
           </Col>
           {stats.map(({ icon, title, value }) => (
@@ -120,8 +144,8 @@ const CryptoDetails = () => {
               Other Stats Info
             </Title>
             <p>
-              An overview showing the statistics of Ex.Bitcoin, such as the base
-              and quote currency, the rank, and trading volume.
+              An overview showing the statistics of {cryptoDetails.name}, such
+              as the base and quote currency, the rank, and trading volume.
             </p>
           </Col>
           {genericStats.map(({ icon, title, value }) => (
@@ -136,26 +160,12 @@ const CryptoDetails = () => {
         </Col>
       </Col>
       <Col className="coin-desc-link">
-        <Row className="coin-desc">
+        <Row>
           <Title level={3} className="coin-details-heading">
-            What is ex.Bitcoin?
+            What is {cryptoDetails.name}?
           </Title>
-          {/* {HTMLReactParser(cryptoDetails.description)} */}
+          {HTMLReactParser(cryptoDetails.description.uk)}
         </Row>
-        <Col className="coin-links">
-          <Title level={3} className="coin-details-heading">
-            Ex.Bitcoin Links
-          </Title>
-
-          <Row className="coin-link">
-            <Title level={5} className="link-name">
-              Type Link
-            </Title>
-            <a href="" target="_blank" rel="noreferrer">
-              Link name
-            </a>
-          </Row>
-        </Col>
       </Col>
     </Col>
   );
