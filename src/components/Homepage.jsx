@@ -1,15 +1,10 @@
 import React from "react";
 import millify from "millify";
-import { useGetCryptosQuery } from "../services/cryptoApi";
-import Loading from "../components/Loader";
 import { Typography, Row, Col, Statistic } from "antd";
 import { Link } from "react-router-dom";
 import { Cryptocurrencies, News } from "../components";
 const { Title } = Typography;
 const Homepage = () => {
-  const { data, isFetching } = useGetCryptosQuery(10);
-  const globalStats = data?.data?.stats;
-  if (isFetching) return <Loading />;
   return (
     <>
       <Title level={2} className="heading">
@@ -17,27 +12,18 @@ const Homepage = () => {
       </Title>
       <Row gutter={[32, 32]}>
         <Col span={12}>
-          <Statistic title="Total Cryptocurrencies" value={globalStats.total} />
+          <Statistic title="Total Cryptocurrencies" value="5" />
         </Col>
 
         <Col span={12}>
-          <Statistic
-            title="Total Market Cap:"
-            value={`$${millify(globalStats.totalMarketCap)}`}
-          />
+          <Statistic title="Total Market Cap:" value="5" />
         </Col>
         <Col span={12}>
-          <Statistic
-            title="Total 24h Volume"
-            value={`$${millify(globalStats.total24hVolume)}`}
-          />
+          <Statistic title="Total 24h Volume" value="5" />
         </Col>
 
         <Col span={12}>
-          <Statistic
-            title="Total Markets"
-            value={millify(globalStats.totalMarkets)}
-          />
+          <Statistic title="Total Markets" value="5" />
         </Col>
       </Row>
       <div className="home-heading-container">
