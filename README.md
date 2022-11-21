@@ -2,9 +2,9 @@
 
 ## Using API:
 
-### CoinGecko API
+### `CoinGecko API`
 
-### Bing News Search API
+### `Bing News Search API`
 
 ### Open Project - [https://crypto-world-a.netlify.app/](https://crypto-world-a.netlify.app/)
 
