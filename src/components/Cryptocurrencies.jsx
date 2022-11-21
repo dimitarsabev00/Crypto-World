@@ -1,34 +1,54 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import millify from "millify";
 import { Link } from "react-router-dom";
 import { Card, Row, Col, Input } from "antd";
+import { useGetAllCryptosQuery } from "../services/coinGeckoAPI";
+import Loader from "./Loader";
 
 const Cryptocurrencies = ({ simplified }) => {
-  // const count = simplified ? 10 : 100;
+  const count = simplified ? 10 : 100;
+  const { data: cryptosList, isFetching } = useGetAllCryptosQuery();
   const [cryptos, setCryptos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  console.log(cryptosList);
+  useEffect(() => {
+    setCryptos(cryptosList);
+
+    const filteredData = cryptosList?.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm)
+    );
+
+    setCryptos(filteredData);
+  }, [cryptosList, searchTerm]);
+
+  if (isFetching) return <Loader />;
 
   return (
     <>
-      {!simplified && (
-        <div className="search-crypto">
-          <Input placeholder="Search Cryptocurrency" />
-        </div>
-      )}
+      <div className="search-crypto">
+        <Input
+          placeholder="Search Cryptocurrency"
+          onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
+        />
+      </div>
+
       <Row gutter={[32, 32]} className="crypto-card-container">
-        <Col xs={24} sm={12} lg={6} className="crypto-card">
-          <Link to={`/crypto/bitcoin`}>
-            <Card
-              title={`rank nameCoin`}
-              extra={<img className="crypto-image" src="" alt="image-card" />}
-              hoverable
-            >
-              <p>Price: 0</p>
-              <p>Market Cap: 0</p>
-              <p>Daily Change: 0</p>
-            </Card>
-          </Link>
-        </Col>
+        {cryptos?.map((currency) => (
+          <Col xs={24} sm={12} lg={6} className="crypto-card" key={currency.id}>
+            {/* Note: Change currency.id to currency.uuid  */}
+            <Link key={currency.id} to={`/crypto/${currency.id}`}>
+              <Card
+                title={`${currency.market_cap_rank}. ${currency.name}`}
+                extra={<img className="crypto-image" src={currency.image} />}
+                hoverable
+              >
+                <p>Price: $ {millify(currency.current_price)}</p>
+                <p>Market Cap: {millify(currency.market_cap)}</p>
+                <p>Daily Change: {currency.price_change_percentage_24h}%</p>
+              </Card>
+            </Link>
+          </Col>
+        ))}
       </Row>
     </>
   );
