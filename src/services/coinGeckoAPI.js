@@ -11,11 +11,24 @@ export const coinGeckoAPI = createApi({
     }),
     getAllCryptos: builder.query({
       query: () =>
-        createRequest(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&sparkline=false
+        createRequest(`/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&sparkline=false
       `),
+    }),
+    getCryptoDetails: builder.query({
+      query: (coinId) => createRequest(`/coins/${coinId}`),
+    }),
+    getCryptoHistory: builder.query({
+      query: ({ coinId, timeperiod }) =>
+        createRequest(
+          `/coins/${coinId}/market_chart?vs_currency=usd&days=${timeperiod}`
+        ),
     }),
   }),
 });
 
-export const { useGetCryptosGlobalDataQuery, useGetAllCryptosQuery } =
-  coinGeckoAPI;
+export const {
+  useGetCryptosGlobalDataQuery,
+  useGetAllCryptosQuery,
+  useGetCryptoDetailsQuery,
+  useGetCryptoHistoryQuery,
+} = coinGeckoAPI;
