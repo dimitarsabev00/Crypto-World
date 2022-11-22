@@ -10,8 +10,8 @@ export const coinGeckoAPI = createApi({
       query: () => createRequest(`/global`),
     }),
     getAllCryptos: builder.query({
-      query: () =>
-        createRequest(`/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&sparkline=false
+      query: (page) =>
+        createRequest(`/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=${page}&sparkline=false
       `),
     }),
     getCryptoDetails: builder.query({
