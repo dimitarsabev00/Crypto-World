@@ -5,8 +5,7 @@ import { Card, Row, Col, Input } from "antd";
 import { useGetAllCryptosQuery } from "../services/coinGeckoAPI";
 import Loader from "./Loader";
 
-const Cryptocurrencies = ({ simplified }) => {
-  const count = simplified ? 10 : 100;
+const Cryptocurrencies = () => {
   const [page, setPage] = useState(0);
   const { data: cryptosList, isFetching } = useGetAllCryptosQuery(page);
   const [cryptos, setCryptos] = useState([]);
@@ -15,20 +14,11 @@ const Cryptocurrencies = ({ simplified }) => {
     if (cryptosList && cryptosList.length > 0) {
       setCryptos((prev) => [...prev, ...cryptosList]);
     }
-  }, [cryptosList]);
-  const handleScroll = () => {
-    if (
-      document.documentElement.scrollHeight -
-        document.documentElement.scrollTop <=
-      document.documentElement.clientHeight
-    ) {
-      setPage((prev) => prev + 1);
-    }
+  }, [cryptosList, searchTerm]);
+  const handleLoadMore = () => {
+    setPage((prev) => prev + 1);
   };
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
   useEffect(() => {
     const filteredData = cryptos.filter((item) =>
       item.name.toLowerCase().includes(searchTerm)
@@ -64,6 +54,20 @@ const Cryptocurrencies = ({ simplified }) => {
           </Col>
         ))}
       </Row>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "1rem",
+        }}
+      >
+        <button
+          style={{ padding: "0.4rem 1.5rem 0.4rem 1.5rem " }}
+          onClick={handleLoadMore}
+        >
+          Load More Cryptos
+        </button>
+      </div>
     </>
   );
 };
