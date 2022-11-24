@@ -19,13 +19,6 @@ const Cryptocurrencies = () => {
     setPage((prev) => prev + 1);
   };
 
-  // useEffect(() => {
-  //   const filteredData = cryptos.filter((item) =>
-  //     item.name.toLowerCase().includes(searchTerm)
-  //   );
-  //   setCryptos(filteredData);
-  // }, [searchTerm]);
-
   if (isFetching) return <Loader />;
   return (
     <>
